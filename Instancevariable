@@ -1,0 +1,500 @@
+Dog Class
+public class Dog extends RescueAnimal {
+/**
+* Dog class that extends from RescueAnimal class
+*
+* Initializes methods to SET and GET basic descriptors of animal,
+* such as name, breed, gender, age, weight, etc.
+*
+* @authorashleyurbas
+* @version 1.0
+* @sinceapril13
+*
+*/
+
+// Instance variable
+private String breed;
+
+// Constructor
+public Dog(String name, String breed, String gender, String age,
+String weight, String acquisitionDate, String acquisitionCountry,
+String trainingStatus, boolean reserved, String inServiceCountry) {
+     setName(name);
+     setBreed(breed);
+     setGender(gender);
+     setAge(age);
+     setWeight(weight);
+     setAcquisitionDate(acquisitionDate);
+     setAcquisitionLocation(acquisitionCountry);
+     setTrainingStatus(trainingStatus);
+     setReserved(reserved);
+     setInServiceCountry(inServiceCountry);
+   }
+
+// Accessor Method
+public String getBreed() {
+return breed;
+   }
+
+// Mutator Method
+public void setBreed(String dogBreed) {
+breed = dogBreed;
+   }
+}
+Driver Class
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Driver {
+/**
+* The main driver/executor of file. Will display a menu with the following options:
+* >Intake new animals, print list of all dogs, print list of all monkeys, print list of
+* >unreserved animals, and quit application
+* New animals can be added to or viewed in this program by the user, and will check
+* if they are available and eligible for training
+*
+* @authorashleyurbas
+* @version 1.0
+* @sinceapril13
+*
+*/
+private static ArrayList<Dog> dogList = new ArrayList<Dog>(); //Create an Array list to store DOG data
+private static ArrayList<Monkey> monkeyList = new ArrayList<Monkey>(); //Create an Array list to store MONKEY data
+
+public static void main(String[] args) {
+Scanner input = new Scanner(System.in); //Initialization of input scanner
+boolean exit = false; //Will evaluate to "true" when user wishes to exit menu loop
+
+//initialize Dog list and Monkey list
+initializeDogList();
+initializeMonkeyList();
+
+//Loop that displays menu & accepts user input until "Q" option is entered
+while (!exit) {
+displayMenu();
+char option = input.next().charAt(0);
+if (option == '1') {
+intakeNewDog(input);
+} else if (option == '2') {
+intakeNewMonkey(input);
+} else if (option == '3') {
+reserveAnimal(input);
+} else if (option == '4') {
+printAnimals("dog");
+} else if (option == '5') {
+printAnimals("monkey");
+} else if (option == '6') {
+printAnimals("available");
+} else if (option == 'q') {
+exit = true; // evaluates boolean "exit" to True, exits loop
+} else {
+System.out.println("please enter valid input");
+}
+      }
+}
+
+// This method prints the menu options
+public static void displayMenu() {
+System.out.println("\n\n");
+System.out.println("\t\t\t\tRescue Animal System Menu");
+System.out.println("[1] Intake a new dog");
+System.out.println("[2] Intake a new monkey");
+System.out.println("[3] Reserve an animal");
+System.out.println("[4] Print a list of all dogs");
+System.out.println("[5] Print a list of all monkeys");
+System.out.println("[6] Print a list of all animals that are not reserved");
+System.out.println("[q] Quit application");
+System.out.println();
+System.out.println("Enter a menu selection");
+}
+
+// Adds dogs to a list for testing
+public static void initializeDogList() {
+Dog dog1 = new Dog("Spot", "German Shepherd", "male", "1", "25.6", "05-12-2019", "United States", "intake",
+false, "United States");
+Dog dog2 = new Dog("Rex", "Great Dane", "male", "3", "35.2", "02-03-2020", "United States", "Phase I", false,
+"United States");
+Dog dog3 = new Dog("Bella", "Chihuahua", "female", "4", "25.6", "12-12-2019", "Canada", "in service", true,
+"Canada");
+dogList.add(dog1);
+dogList.add(dog2);
+dogList.add(dog3);
+}
+// Adds monkeys to a list for testing
+// Optional for testing
+public static void initializeMonkeyList() {
+Monkey monkey1 = new Monkey("Marcel", "male", "1", "15.6", "07-12-2019", "United States", "in service", true,
+"United States", 44, 10, 30, "macaque");
+Monkey monkey2 = new Monkey("Coco", "male", "3", "25.2", "02-29-2080", "Brazil", "Phase I", false, "Brazil", 46,
+11, 32, "tamarin");
+Monkey monkey3 = new Monkey("Ally", "female", "4", "15.6", "07-14-2017", "Canada", "in service", false,
+"Canada", 43, 9, 28, "squirrel monkey");
+monkeyList.add(monkey1);
+monkeyList.add(monkey2);
+monkeyList.add(monkey3);
+}
+// Method to intake new dog
+public static void intakeNewDog(Scanner scanner) {
+System.out.println("What is the dog's name?");
+String name = scanner.next();
+for (Dog dog : dogList) {
+if (dog.getName().equalsIgnoreCase(name)) {
+System.out.println("\n\nThis dog is already in our system\n\n");
+return; // returns to menu
+}
+}
+// Method to add new dog and add it to appropriate list
+System.out.println("What is the dog's breed?");
+String breed = scanner.next();
+System.out.println("What is the dog's gender?");
+String gender = scanner.next();
+System.out.println("What is the dog's age?");
+String age = scanner.next();
+System.out.println("What is the dog's weight?");
+String weight = scanner.next();
+System.out.println("What is the dog's acquisition date? [mm/dd/yy]");
+String acDate = scanner.next();
+System.out.println("What is the dog's acquisition country?");
+String acCountry = scanner.next();
+System.out.println("What is the dog's training status?");
+String trainingStatus = scanner.next();
+System.out.println("Is the dog reserved? [true or false]");
+boolean reserve = scanner.nextBoolean();
+System.out.println("What is the dog's service country?");
+String serviceCountry = scanner.next();
+dogList.add(new Dog(name, breed, gender, age, weight, acDate, acCountry,
+trainingStatus, reserve, serviceCountry));
+}
+
+// intakeNewMonkey, with input validation and measures taken to ascertain
+// if the species type is allowed and the monkey does not already exist.
+// also includes option to exit intake session at any time without appending
+// data to list
+public static void intakeNewMonkey(Scanner scanner) {
+boolean quit = false;
+while (!quit) {
+System.out.println("What is the monkey's name?\n"
++ "Enter \"q\" now to exit");
+String name = scanner.next();
+if (name.equals("q")) {quit = true;	break;}
+
+for (Monkey monkey : monkeyList) {
+if (monkey.getName().equalsIgnoreCase(name)) {
+System.out.println("\n\nThis monkey is already in our system\n\n");
+return; // returns to menu
+}
+}
+//Gets the monkey's species from user, included species list and validation
+System.out.println("What is the monkey's species?");
+System.out.println("Valid species include the following:\n"
++ "capuchin|guenon|macaque\n"
++ " marmoset|squirrel monkey|tamarin");
+String species = scanner.next().toLowerCase();
+//Ascertains if input (case insensitive) matches a valid species. If it does not, it returns user to menu
+if (!species.equals("capuchin") && !species.equals("guenon") && !species.equals("macaque")
+&& !species.equals("marmoset") && !species.equals("squirrel monkey") && !species.equals("tamarin")) {
+System.out.println("\n\nThis monkey is not eligible for training\n\n");
+return;
+}
+System.out.println("What is the monkey's gender?");
+String gender = scanner.next();
+System.out.println("What is the monkey's age?");
+String age = scanner.next();
+System.out.println("What is the monkey's weight?");
+String weight = scanner.next();
+System.out.println("What is the monkey's acquisition date? [mm/dd/yy]");
+String acDate = scanner.next();
+System.out.println("What is the monkey's acquisition country?");
+String acCountry = scanner.next();
+System.out.println("What is the monkey's training status?");
+String trainingStatus = scanner.next();
+System.out.println("Is the monkey reserved? [true or false]");
+boolean reserve = scanner.nextBoolean();
+System.out.println("What is the monkey's service country?");
+String serviceCountry = scanner.next();
+System.out.println("What is the monkey's body length?");
+int bodyLength = scanner.nextInt();
+System.out.println("What is the monkey's tail length?");
+int tailLength = scanner.nextInt();
+System.out.println("What is the monkey's height?");
+int height = scanner.nextInt();
+
+//gives user the option to add or not add monkey to list
+System.out.println("Would you like to save this information and add this new monkey?");
+String addInput = scanner.next();
+
+while (!(addInput == null)) {
+if ((addInput.equalsIgnoreCase("yes"))|| (addInput.equalsIgnoreCase("y"))) {
+monkeyList.add(new Monkey(name, gender, age, weight, acDate, acCountry, trainingStatus, reserve,
+serviceCountry, bodyLength, tailLength, height, species));
+break;
+} else if ((addInput.equalsIgnoreCase("no"))|| (addInput.equalsIgnoreCase("n"))) {
+break;
+} else {
+System.out.println("Please enter valid input [yes, y, no, n]");
+addInput = scanner.next();
+continue;
+}
+} break;
+       }
+}
+
+// @method RESERVE ANIMAL
+public static void reserveAnimal(Scanner scanner) {
+System.out.println("Enter animal type: [Dog or Monkey]");
+String type = scanner.next().toLowerCase();
+if (!type.equals("dog") && !type.equals("monkey")) {
+System.out.println("Invalid input");
+return;
+}
+System.out.println("Enter animal service country: ");
+String serviceCountry = scanner.next().toLowerCase(); //
+if (type.equals("dog")) {
+for (int i = 0; i < dogList.size(); i++) {
+if (dogList.get(i).getInServiceCountry().equals(serviceCountry) && !dogList.get(i).getReserved()) {
+System.out.println(dogList.get(i).toString() + " is now reserved.");
+return;
+}
+}
+} else {
+for (int i = 0; i < monkeyList.size(); i++) {
+if (monkeyList.get(i).getInServiceCountry().equals(serviceCountry)
+&& !monkeyList.get(i).getReserved()) {
+System.out.println(monkeyList.get(i).getName() + " is now reserved.");
+return;
+}
+}
+}
+}
+
+
+
+// @method PRINT ANIMALS prints out data in array lists
+public static void printAnimals(String type) {
+if (type.toLowerCase().equals("dog")) {
+System.out.println("List of dogs: ");
+for (Dog dog : dogList) {
+System.out.println(dog.getName() + "\t" + dog.getTrainingStatus() + "\t" + dog.getAcquisitionLocation()
++ "\t" + dog.getReserved());
+}
+} else if (type.toLowerCase().equals("monkey")) {
+System.out.println("List of dogs: ");
+for (Monkey monkey : monkeyList) {
+System.out.println(monkey.getName() + "\t" + monkey.getTrainingStatus() + "\t"
++ monkey.getAcquisitionLocation() + "\t" + monkey.getReserved());
+}
+} else if (type.toLowerCase().equals("available")) {
+System.out.println("List of available animals: ");
+for (Dog dog : dogList) {
+if (dog.getTrainingStatus().equalsIgnoreCase("in service") && !dog.getReserved()) {
+System.out.println(dog.getName() + "\t" + dog.getTrainingStatus() + "\t"
++ dog.getAcquisitionLocation() + "\t" + dog.getReserved());
+}
+}
+for (Monkey monkey : monkeyList) {
+if (monkey.getTrainingStatus().equalsIgnoreCase("in service") && !monkey.getReserved()) {
+System.out.println(monkey.getName() + "\t" + monkey.getTrainingStatus() + "\t"
++ monkey.getAcquisitionLocation() + "\t" + monkey.getReserved());
+}
+  }
+     }
+         }
+}
+
+
+Monkey Class
+public class Monkey extends RescueAnimal {
+/**
+* Monkey class that extends from RescueAnimal class
+*
+* Initializes methods to SET and GET basic descriptors of animal,
+* such as name, breed, gender, age, weight, etc. Includes special
+* breeds specific to monkeys eligible for training
+*
+* @authorashleyurbas
+* @version 1.0
+* @sinceapril13
+*
+*/
+// Instance variables specific to monkeys (remaining vars inherited from RescueAnimal class)
+public int bodyLength;
+public int tailLength;
+public int height;
+public String species;
+
+// Monkey class constructor
+public Monkey(String name, String gender, String age, String weight, String acquisitionDate, String acquisitionCountry,
+String trainingStatus, boolean reserved, String inServiceCountry,
+int bodyLength, int tailLength, int height, String species) {
+super(name, "monkey", gender, age, weight, acquisitionDate, acquisitionCountry, trainingStatus, reserved, inServiceCountry);
+this.bodyLength = bodyLength;
+this.tailLength = tailLength;
+this.height = height;
+this.species = species;
+}
+
+// Mutator Methods
+public void setBodyLength(int bodyLength) {
+this.bodyLength = bodyLength;     //BODY LENGTH(MUTATE)
+}
+
+public void setTailLength(int tailLength) {
+this.tailLength = tailLength; //TAIL LENGTH(MUTATE)
+}
+
+public void setHeight(int height) {
+this.height = height; //HEIGHT(MUTATE)
+}
+
+public void setSpecies(String species) {
+this.species = species;//SPECIES(MUTATE)
+}
+
+// Accessor Methods
+public int getBodyLength() {
+return bodyLength;//BODY LENGTH(GET)
+}
+
+public int getTailLength() {
+return tailLength;//TAIL LENGTH(GET)
+}
+
+public int getHeight() {
+return height;//HEIGHT(GET)
+}
+
+public String getSpecies() {
+return species;//SPECIES(GET)
+  }
+}
+
+
+
+
+
+
+RescueAnimal Class
+import java.lang.String;
+public class RescueAnimal {
+/**
+* Base class RescueAnimal that extends to Monkey and Dog classes
+*
+* Initializes methods to SET and GET basic descriptors of animal,
+* such as name, breed, gender, age, weight, etc. Includes special
+* breeds specific to monkeys eligible for training
+*
+* @authorINSERTNAME
+* @version 1.0
+* @sinceINSERTDATE
+*
+*/
+// Instance variables
+private String name;
+private String animalType;
+private String gender;
+private String age;
+private String weight;
+private String acquisitionDate;
+private String acquisitionCountry;
+private String trainingStatus;
+private boolean reserved;
+private String inServiceCountry;
+
+// Constructor
+public RescueAnimal() {
+}
+
+public RescueAnimal(String name, String animalType, String gender, String age, String weight, String acquisitionDate,
+String acquisitionCountry, String trainingStatus, boolean reserved, String inServiceCountry){
+   this.name = name;
+   this.animalType = animalType;
+   this.gender = gender;
+   this.age = age;
+   this.weight = weight;
+   this.acquisitionDate = acquisitionDate;
+   this.acquisitionCountry = acquisitionCountry;
+   this.trainingStatus = trainingStatus;
+   this.reserved = reserved;
+   this.inServiceCountry = inServiceCountry;
+ }
+
+public String getName() {
+return name;//NAME (GET)
+}
+
+public void setName(String name) {
+this.name = name;//NAME (MUTATE)
+}
+
+public String getAnimalType() {
+return animalType;//ANIMAL TYPE (GET)
+}
+
+public void setAnimalType(String animalType) {
+this.animalType = animalType;//ANIMAL TYPE (MUTATE)
+}
+
+public String getGender() {
+return gender;//GENDER (GET)
+}
+
+public void setGender(String gender) {
+this.gender = gender;//GENDER (MUTATE)
+}
+
+public String getAge() {
+return age;//AGE (GET)
+}
+
+public void setAge(String age) {
+this.age = age;//AGE (MUTATE)
+}
+
+public String getWeight() {
+return weight;//WEIGHT (GET)
+}
+
+public void setWeight(String weight) {
+this.weight = weight;//WEIGHT (MUTATE)
+}
+
+public String getAcquisitionDate() {
+return acquisitionDate;//ACQUISITION DATE (GET)
+}
+
+public void setAcquisitionDate(String acquisitionDate) {
+this.acquisitionDate = acquisitionDate;//ACQUISITION DATE (MUTATE)
+}
+
+public String getAcquisitionLocation() {
+return acquisitionCountry;//ACQUISITION LOCATION (GET)
+}
+
+public void setAcquisitionLocation(String acquisitionCountry) {
+this.acquisitionCountry = acquisitionCountry;//ACQUISITION LOCATION (MUTATE)
+}
+
+public boolean getReserved() {
+return reserved;//RESERVED? (GET)
+}
+
+public void setReserved(boolean reserved) {
+this.reserved = reserved;//RESERVED? (MUTATE)
+    }
+
+public String getInServiceCountry() {
+return inServiceCountry;//SERVICE COUNTRY (GET)
+    }
+
+public void setInServiceCountry(String inServiceCountry) {
+this.inServiceCountry = inServiceCountry;//SERVICE COUNTRY (MUTATE)
+    }
+
+public String getTrainingStatus() {
+return trainingStatus;//TRAINING STATUS (GET)
+    }
+
+public void setTrainingStatus(String trainingStatus) {
+this.trainingStatus = trainingStatus;//TRAINING STATUS (MUTATE)
+    }
+}
